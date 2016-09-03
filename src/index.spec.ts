@@ -8,15 +8,19 @@ import { IncrementalSearch } from "./";
 const renderDOM = (vDOMInstance: ReactElement<void>): HTMLDivElement => {
   const root = document.createElement("div");
   document.body.appendChild(root);
-
   render(vDOMInstance, root);
   return root;
 };
 
-describe("Test", () => {
-  it("should", () => {
+describe("IncrementalSearch", () => {
+  it("Should update state with inputed text", () => {
     const root = renderDOM(createElement(IncrementalSearch));
-    // console.log(root);
-    deepEqual(true, true);
+    const input = root.querySelector("input") as HTMLInputElement;
+    const onInput = new Event("input", { bubbles: true });
+
+    input.value = "abc";
+    input.dispatchEvent(onInput);
+
+    deepEqual(root.querySelector("input").value, "abc");
   });
 });
