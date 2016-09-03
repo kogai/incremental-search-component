@@ -1,5 +1,9 @@
-import { createElement } from "react";
-import hh from "hyperscript-helpers";
-const { div, input } = hh(createElement);
+import { createElement, StatelessComponent } from "react";
+import hh = require("hyperscript-helpers");
+const { div } = hh(createElement);
 
-// export default 
+export const IncrementalSearch: StatelessComponent<void> = () => {
+  return div(".id", null, ["テキストファイル!!!"]);
+};
+
+IncrementalSearch.displayName = "IncrementalSearch";

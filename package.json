@@ -13,13 +13,18 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@kogai/hyperscript-helpers": "^3.0.1",
+    "lodash": "^4.15.0",
     "react": "^15.3.1",
-    "hyperscript-helpers": "^3.0.1"
+    "react-dom": "^15.3.1",
+    "rxjs": "^5.0.0-beta.11"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.34",
     "@types/mocha": "^2.2.31",
     "@types/node": "^6.0.38",
     "@types/react": "^0.14.33",
+    "@types/react-dom": "^0.14.16",
     "awesome-typescript-loader": "^2.2.1",
     "babel-core": "^6.14.0",
     "karma": "^1.2.0",
