@@ -5,7 +5,9 @@
   "main": "src/index.ts",
   "scripts": {
     "tsc": "$(npm bin)/tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "karma": "$(npm bin)/karma",
+    "build": "$(npm bin)/webpack --display-error-details",
+    "test": "npm run karma -- start karma.conf.js"
   },
   "keywords": [],
   "author": "",
@@ -15,10 +17,20 @@
     "hyperscript-helpers": "^3.0.1"
   },
   "devDependencies": {
+    "@types/mocha": "^2.2.31",
     "@types/node": "^6.0.38",
     "@types/react": "^0.14.33",
-    "browserify": "^13.1.0",
+    "awesome-typescript-loader": "^2.2.1",
+    "babel-core": "^6.14.0",
     "karma": "^1.2.0",
-    "typescript": "^2.1.0-dev.20160903"
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-mocha": "^1.1.1",
+    "karma-mocha-reporter": "^2.1.0",
+    "karma-webpack": "^1.8.0",
+    "mocha": "^3.0.2",
+    "source-map-loader": "^0.1.5",
+    "ts-loader": "^0.8.2",
+    "typescript": "^2.1.0-dev.20160903",
+    "webpack": "^1.13.2"
   }
 }
