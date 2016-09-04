@@ -2,9 +2,7 @@ import { Observable, Subject } from "rxjs";
 import { createElement, Component } from "react";
 import hh = require("hyperscript-helpers");
 import { InputEvent, bindWith, bindWithAction, Action, ACTION_INPUT } from "./helpers";
-import { ofType } from "./OfType";
-
-Observable.prototype.ofType = ofType;
+import "./OfType";
 
 const { div, input } = hh(createElement);
 
@@ -28,10 +26,9 @@ export class IncrementalSearch extends Component<IIncrementalSearch, State> {
     this.state = { value: "" };
   }
 
-  private createValue$(action$: Subject<Action<InputEvent>>): Observable<string> {
+  private createValue$(action$: Subject<any>): Observable<string> {
     return action$
       .ofType<InputEvent>(ACTION_INPUT)
-      // .do(console.log)
       .map(({ target }) => target.value)
       ;
   }

@@ -13,14 +13,14 @@ export interface OfTypeSignature<T> {
   <T>(actionType: string): Observable<T>;
 }
 
-export class OfTypeOperator<R> implements Operator<void, R> {
+export class OfTypeOperator<A, T> implements Operator<A, T> {
   constructor(private actionType: string) {}
-  call(subscriber: Subscriber<R>, source: any): any {
+  call(subscriber: Subscriber<T>, source: any): any {
     return source._subscribe(new OfTypeSubscriber(subscriber, this.actionType));
   }
 }
 
-export class OfTypeSubscriber<T, A extends Action<T>> extends Subscriber<T> {
+export class OfTypeSubscriber<A extends Action<T>, T> extends Subscriber<A> {
   constructor(destination: Subscriber<T>, private actionType: string) {
     super(destination);
   }
@@ -32,8 +32,10 @@ export class OfTypeSubscriber<T, A extends Action<T>> extends Subscriber<T> {
   }
 }
 
-// interface Observable<T> {
-//   ofType: OfTypeSignature<T>;
-// }
+declare module "rxjs/Observable" {
+  interface Observable<T> {
+    ofType: OfTypeSignature<T>;
+  }
+}
 
-// Observable.prototype.ofType = ofType;
+Observable.prototype.ofType = ofType;
