@@ -4,7 +4,7 @@ import { createElement, Component } from "react";
 import hh = require("hyperscript-helpers");
 
 import { InputEvent, bindWith, bindWithAction, Action, ACTION_INPUT, ACTION_RESULT } from "./helpers";
-import "./OfType";
+import "of-type-operator";
 
 const { div, input } = hh(createElement);
 const { ajax, combineLatest } = Observable;
