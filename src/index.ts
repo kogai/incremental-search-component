@@ -1,50 +1,80 @@
 import { Observable, Subject } from "rxjs";
+import { AjaxObservable, AjaxCreationMethod } from "rxjs/observable/dom/AjaxObservable";
 import { createElement, Component } from "react";
 import hh = require("hyperscript-helpers");
-import { InputEvent, bindWith, bindWithAction, Action, ACTION_INPUT } from "./helpers";
+
+import { InputEvent, bindWith, bindWithAction, Action, ACTION_INPUT, ACTION_RESULT } from "./helpers";
 import "./OfType";
 
 const { div, input } = hh(createElement);
+const { ajax, combineLatest } = Observable;
+const defaultAuditTime = 500;
 
-export interface IIncrementalSearch {}
+export interface IIncrementalSearch {
+  url: string;
+  query: string;
+  onSearch: (result: any) => void;
+  auditTime?: number;
+}
 
 interface State {
-  value: string;
+  input: string;
+  result: any;
 }
 
 export class IncrementalSearch extends Component<IIncrementalSearch, State> {
-  private action$: Subject<any>;
-  private input$: Observable<string>;
+  private action$: Subject<Action<any>>;
+  private state$: Observable<State>;
   private onChange: (event: InputEvent) => void;
 
   constructor() {
     super();
-    this.action$ = new Subject();
-    this.input$ = this.createValue$(this.action$);
-
-    this.onChange = bindWithAction(ACTION_INPUT, this.action$);
-    this.state = { value: "" };
+    this.state = {
+      input: "",
+      result: {},
+    };
   }
 
-  private createValue$(action$: Subject<any>): Observable<string> {
+  private createInput$(action$: Subject<Action<any>>): Observable<string> {
     return action$
       .ofType<InputEvent>(ACTION_INPUT)
       .map(({ target }) => target.value)
+      .startWith("")
       ;
   }
 
+  private createResult$(input$: Observable<string>): Observable<any> {
+    const { url, query, auditTime } = this.props;
+    return input$
+      .filter(input => input.length > 0)
+      .auditTime(auditTime ? auditTime : defaultAuditTime)
+      .map(input => ajax.getJSON(`${url}?${query}=${input}`))
+      .mergeAll().share()
+      .do(this.props.onSearch)
+      .startWith({})
+      ;
+  }
+
+  private createState$(action$: Subject<Action<any>>): Observable<State> {
+    const input$ = this.createInput$(action$);
+    const result$ = this.createResult$(input$);
+    return combineLatest(input$, result$, (input, result) => ({ input, result }));
+  }
+
   componentWillMount() {
-    this.input$.subscribe(value => this.setState({ value }));
+    this.action$ = new Subject<Action<any>>();
+    this.onChange = bindWithAction(ACTION_INPUT, this.action$);
+    this.state$ = this.createState$(this.action$);
+    this.state$.subscribe(nextState => this.setState(nextState));
   }
 
   render() {
-    const { value } = this.state;
     const onChange = this.onChange.bind(this);
 
     return div(null, [
       input({
         key: 0,
-        value: value,
+        value: this.state.input,
         onChange,
       })
     ]);

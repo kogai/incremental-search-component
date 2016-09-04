@@ -14,7 +14,11 @@ const renderDOM = (vDOMInstance: ReactElement<IIncrementalSearch>): HTMLDivEleme
 
 describe("IncrementalSearch", () => {
   it("Should update state with inputed text", () => {
-    const rootVirtualDOM = createElement(IncrementalSearch, {});
+    const rootVirtualDOM = createElement(IncrementalSearch, {
+      url: "https://api.github.com/search/repositories",
+      query: "q",
+      onSearch: (result: any) => console.log(result),
+    });
     const root = renderDOM(rootVirtualDOM);
     const input = root.querySelector("input") as HTMLInputElement;
     const onInput = new Event("input", { bubbles: true });
