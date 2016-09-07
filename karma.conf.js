@@ -20,10 +20,8 @@ module.exports = function(config) {
     },
     webpack: {
       cache: webpackConfig.cache,
-      devtool: 'inline-source-map',
-      module: {
-        loaders: webpackConfig.module.loaders,
-      },
+      devtool: webpackConfig.devtool,
+      module: webpackConfig.module,
       fileLoader: webpackConfig.fileLoader,
       resolve: webpackConfig.resolve,
       plugins: webpackConfig.plugins

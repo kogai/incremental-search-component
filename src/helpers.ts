@@ -8,7 +8,6 @@ export interface InputEvent {
 
 export const ACTION_INPUT = "ACTION_INPUT";
 export const ACTION_RESULT = "ACTION_RESULT";
-// type actionTypes = ON_INPUT;
 
 export interface Action<T> {
   type: string;

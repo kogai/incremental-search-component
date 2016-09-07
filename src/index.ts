@@ -8,7 +8,7 @@ import "of-type-operator";
 
 const { div, input } = hh(createElement);
 const { ajax, combineLatest } = Observable;
-const defaultAuditTime = 500;
+const defaultAuditTime = 100;
 
 export interface IIncrementalSearch {
   url: string;
@@ -48,8 +48,7 @@ export class IncrementalSearch extends Component<IIncrementalSearch, State> {
     return input$
       .filter(input => input.length > 0)
       .auditTime(auditTime ? auditTime : defaultAuditTime)
-      .map(input => ajax.getJSON(`${url}?${query}=${input}`))
-      .mergeAll().share()
+      .mergeMap(input => ajax.getJSON(`${url}?${query}=${input}`))
       .do(this.props.onSearch)
       .startWith({})
       ;
