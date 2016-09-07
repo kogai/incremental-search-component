@@ -1,6 +1,7 @@
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, BehaviorSubject, ReplaySubject } from "rxjs";
 import { AjaxObservable, AjaxCreationMethod } from "rxjs/observable/dom/AjaxObservable";
 import { createElement, Component } from "react";
+import { merge } from "lodash";
 import hh = require("hyperscript-helpers");
 
 import { InputEvent, bindWith, bindWithAction, Action, ACTION_INPUT, ACTION_RESULT } from "./helpers";
@@ -39,7 +40,6 @@ export class IncrementalSearch extends Component<IIncrementalSearch, State> {
     return action$
       .ofType<InputEvent>(ACTION_INPUT)
       .map(({ target }) => target.value)
-      .startWith("")
       ;
   }
 
@@ -50,14 +50,18 @@ export class IncrementalSearch extends Component<IIncrementalSearch, State> {
       .auditTime(auditTime ? auditTime : defaultAuditTime)
       .mergeMap(input => ajax.getJSON(`${url}?${query}=${input}`))
       .do(this.props.onSearch)
-      .startWith({})
       ;
   }
 
   private createState$(action$: Subject<Action<any>>): Observable<State> {
     const input$ = this.createInput$(action$);
     const result$ = this.createResult$(input$);
-    return combineLatest(input$, result$, (input, result) => ({ input, result }));
+    return Observable.merge(
+      input$.map(input => ({ input })),
+      result$.map(result => ({ result }))
+    )
+    .scan<State>(merge)
+    ;
   }
 
   componentWillMount() {

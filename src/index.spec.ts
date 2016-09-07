@@ -25,7 +25,7 @@ describe("IncrementalSearch", () => {
 
   it("Should update state with inputed text", (done) => {
     const respose = { foo: "bar" };
-    server.respondWith("GET", /test\?query=.*/, JSON.stringify(respose));
+    server.respondWith("GET", /test\?query=abc/, JSON.stringify(respose));
 
     const rootVirtualDOM = createElement(IncrementalSearch, {
       url: "/test",
